@@ -1,36 +1,84 @@
+const joi = require("joi")
+
+const getUserSchema = joi.object().keys({
+    email : joi.string().email().required(),
+    password : joi.string().min(8).max(15).required()
+})
+
+const createUserSchema = joi.object().keys({
+    firstName : joi.string(),
+    lastName : joi.string(),
+    email : joi.string().email().required(),
+    password : joi.string().min(8).max(15).required()
+})
+
+const updateUserSchema = joi.object().keys({
+    email : joi.string().email().required(),
+    password : joi.string().min(8).max(15).required()
+})
+const deleteUserSchema = joi.object().keys({
+    email : joi.string().email().required(),
+    password : joi.string().min(8).max(15).required()
+})
+
 module.exports = {
     
-        getUser :(req,res)=>{
-            
+        getUser : async (req,res)=>{
+            try{
+                const validate = await getUserSchema.validateAsync(req.query);
            return res.send ({
                 message : "getting user",
-                data: req.body
+                data: validate
             })  
+        }catch(error){
+            return res.send({
+                message : error.message 
+            })
+        }
         },
 
-        createUser :(req,res)=>{
-            const newUser = req.body
+        createUser : async(req,res)=>{
+            
+            
+            try{
+                const validate = await createUserSchema.validateAsync(req.body);
             return res.send ({
                 message: "creating a new user",
-                data : newUser
+                data : validate
             })
-        },
-        updateUser :(req,res)=>{
-           const updatedUserData = req.body;
-           const userId = req.body.id;
-
+        }catch(error){
             return res.send({
-                message: `user with ${userId} Updated Successfully`,
-                data : updatedUserData
+                message : error.message
             })
+        }
         },
-        deleteUser : (req, res)=>{
-            const deletedUserData = req.body;
-           const userId = 2;
-
+        updateUser :async(req,res)=>{
+    
+            try{
+                const validate =await updateUserSchema.validateAsync(req.body)
             return res.send({
-                message : `user with Id = ${userId} deleted Successfully`,
-                data : deletedUserData
+                message: `user Updated Successfully`,
+                data : validate
             })
+        }catch(error){
+            res.send({
+                message : error.message
+            })
+        }
+        },
+        deleteUser : async(req, res)=>{
+
+          
+            try{
+                const validate =await deleteUserSchema.validateAsync(req.query)
+            return res.send({
+                message : `user deleted Successfully`,
+                data : validate
+            })
+        }catch(error){
+            res.send({
+                message :error.message
+            })
+        }
         }
     }
