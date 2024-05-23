@@ -7,6 +7,8 @@
 var app = require('../app');
 var debug = require('debug')('backend-practice:server');
 var http = require('http');
+var {db} = require("../models/index");
+const { error } = require('console');
 
 /**
  * Get port from environment and store in Express.
@@ -25,9 +27,15 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+db.sequelize.sync({
+  alter: true, logging : false,
+}).then(()=>{
+  server.listen(port);
+  server.on("error" , onError),
+  server.on("listening", onListening)
+}).catch((error)=>{
+  console.log("errorr", error.message)
+})
 
 /**
  * Normalize a port into a number, string, or false.

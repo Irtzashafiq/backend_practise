@@ -2,6 +2,7 @@ var createError = require('http-errors');
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var userRouter = require("./routes/userRouter");
 var authrouter = require("./routes/authrouter")
 
 var app = express();
@@ -13,8 +14,9 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use("/auth",authrouter)
+app.use("/user", userRouter)
 
-app.use("/auth" , authrouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

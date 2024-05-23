@@ -9,7 +9,8 @@ const obj = {
 
     logout : (req,res)=>{
         return res.send({
-            message : "Logged Out"
+            message : "Logged Out",
+            data : req.body
         });
     },
     
